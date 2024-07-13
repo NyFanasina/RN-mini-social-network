@@ -46,13 +46,6 @@ export default function Layout() {
                     href: null
                 }}
             />
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: "Login",
-                    href: null
-                }}
-            />
         </Tabs>
     );
 }

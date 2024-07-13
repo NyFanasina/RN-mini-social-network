@@ -9,6 +9,7 @@ export default function RootLayout() {
             <SafeAreaView style={{ flex: 1 }}>
                 <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="(tabs)" />
+                    <Stack.Screen name="SignIn" />
                 </Stack>
             </SafeAreaView>
         </SafeAreaProvider>

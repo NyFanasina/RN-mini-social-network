@@ -3,7 +3,7 @@ import { Colors } from '@/constants/Colors'
 import Config from '@/constants/Config';
 import axios from 'axios';
 import { Link, router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 const { baseURL } = Config;
 
@@ -15,6 +15,23 @@ const initialUser = {
 export default function SignIn() {
     const [user, setUser] = useState<any>(initialUser);
     const [error, setError] = useState<string>("");
+
+    useLayoutEffect(() => {
+        (async () => {
+            const data = await myStorage.get();
+            const token = data.token;
+            if (token)
+                axios.post(`${Config.baseURL}/auth/loginWithHash`, null, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                    .then(res => {
+                        router.replace('/Home');
+                    })
+                    .catch(e => console.log(e))
+            else
+                myStorage.distroy();
+        })()
+    }, [])
 
     function handleInput(key: string, event: any) {
         event.persist();
@@ -42,6 +59,7 @@ export default function SignIn() {
                 setUser({});
             })
             .catch(e => {
+                console.log(e)
                 if (e.response.status === 401) setError('Pseudo ou mot de passe incorrect.')
             })
     }

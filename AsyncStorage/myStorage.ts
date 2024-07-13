@@ -6,7 +6,7 @@ class myStorage {
     }
 
     static async get() {
-        const userString: string = await AsyncStorage.getItem('user') ?? '';
+        const userString: string = await AsyncStorage.getItem('user') ?? '{}';
         return JSON.parse(userString);
     }
 

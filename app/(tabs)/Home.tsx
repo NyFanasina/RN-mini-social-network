@@ -15,6 +15,10 @@ export default function Home() {
     const [posts, setPosts] = useState([]);
     const route = useRoute();
 
+    useEffect(() => {
+        loadPosts();
+    }, [route])
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         loadPosts().finally(() => {
@@ -22,16 +26,13 @@ export default function Home() {
         })
     }, []);
 
-    useEffect(() => {
-        loadPosts();
-    }, [route])
 
     async function loadPosts() {
         axios.get(`${baseURL}/post/posts`, await axiosConfig())
             .then(res => {
                 setPosts(res.data)
             })
-            .catch(e => console.log(e.response))
+            .catch(e => console.log(e));
     }
 
     return (
