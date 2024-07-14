@@ -55,7 +55,7 @@ export default function SignIn() {
         axios.post(`${baseURL}/auth/login`, user)
             .then(res => {
                 myStorage.store(res.data)
-                router.push('/Home')
+                router.replace('/Home')
                 setUser({});
             })
             .catch(e => {

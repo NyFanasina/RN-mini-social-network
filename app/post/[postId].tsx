@@ -37,7 +37,7 @@ export default function Post() {
     return (
         <ScrollView>
             <View>
-                {post.id && <Posts post={post} />}
+                {post.id && <Posts post={post} showDownload={postId} />}
                 <CommentForm postId={postId} loadComment={loadComment} />
                 {
                     comments.map((comment: any) => <Comment key={comment.id} username={comment.username} img={comment.profile_picture} content={comment.content} />)

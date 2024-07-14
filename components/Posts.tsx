@@ -7,7 +7,7 @@ import { router } from 'expo-router'
 import Config, { axiosConfig } from '@/constants/Config'
 import ImageAutoSized from './ImageAutoSized'
 
-export default function Posts({ post }: any) {
+export default function Posts({ post, showDownload }: any) {
     const [comments, setComments] = useState([]);
     const [countComment, setCountComment] = useState(0);
     const [countLike, setCountLike] = useState();
@@ -46,7 +46,7 @@ export default function Posts({ post }: any) {
             </View>
             <TouchableOpacity onPress={() => router.navigate(`post/${post.id}`)}>
                 <Text style={s.content}>{post.content}</Text>
-                {post.media_url && <ImageAutoSized uri={post.media_url} />}
+                {post.media_url && <ImageAutoSized uri={post.media_url} showDownload={showDownload} />}
             </TouchableOpacity>
 
             {/* Menu: Like - Comment - Share */}
