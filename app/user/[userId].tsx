@@ -49,7 +49,7 @@ export default function User() {
         <ScrollView>
             <View>
                 <View style={s.head}>
-                    <Ionicons name='arrow-back-outline' size={35} onPress={router.back} />
+                    <Ionicons name='chevron-back-outline' size={35} onPress={router.back} />
                 </View>
                 <View style={s.container}>
                     <ProfileAvatar username={user.username} img={user.profile_picture} />

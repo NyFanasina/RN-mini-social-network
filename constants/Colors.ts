@@ -9,5 +9,6 @@ const tintColorDark = '#fff';
 export const Colors = {
   rose: "#db2777",
   gray: "#9ca3af",
-  light: "#f9fafb"
+  light: "#f9fafb",
+  lightGray: "#e5e7eb"
 };
