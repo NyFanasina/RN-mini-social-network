@@ -1,26 +1,40 @@
-import { StyleSheet, Text, View, Pressable, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import Avatar from './Avatar'
 import { router } from 'expo-router'
 
-export default function Chatrooms() {
+export default function Chatrooms({ chatroom }: any) {
+
+    function handleClick() {
+        router.push(`chat/${chatroom.recipient}`)
+        router.setParams({
+            interlocutor: chatroom.interlocutor
+        })
+    }
+
     return (
-        <TouchableOpacity style={s.container} onPress={() => router.push("/Chat")}>
-            <Avatar />
+        <TouchableOpacity style={s.container} onPress={handleClick}>
+            <Avatar img={chatroom.profile_picture} />
             <View style={s.Chatrooms}>
-                <Text style={s.username}>Lorem, ipsum.</Text>
-                <Text style={s.snippet}>Lorem ipsum dolor sit amet consectetur adipisicing elit...</Text>
+                <Text style={s.username}>{chatroom.interlocutor}</Text>
+                <Text style={s.snippet}>{chatroom.lastMsg}</Text>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 }
 
 const s = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: 8,
+        alignItems: 'center',
+        marginVertical: 10,
+        padding: 5,
+        height: 60,
+        // borderWidth: 0.75,
+        overflow: 'hidden'
     },
     Chatrooms: {
-        marginStart: 5,
+        flex: 1,
+        marginStart: 10,
     },
     username: {
         fontSize: 17,
@@ -28,6 +42,5 @@ const s = StyleSheet.create({
     },
     snippet: {
         fontSize: 13,
-        paddingEnd: 15
     }
 })
