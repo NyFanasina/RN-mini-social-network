@@ -23,7 +23,7 @@ export default function UserChatroomItem({ user }: any) {
     async function onContactTo() {
         router.navigate(`/chat/${user.id}`)
         router.setParams({
-            recipient_name: user.username
+            interlocutor: user.username
         })
     }
 

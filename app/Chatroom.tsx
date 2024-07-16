@@ -28,13 +28,14 @@ export default function Chatroom() {
     // }
 
 
-    function loadChatrooms() {
-        axios.get(`${Config.chatURL}/chatroom`)
+    async function loadChatrooms() {
+        const userId = await myStorage.getUserId();
+        axios.get(`${Config.chatURL}/chatroom?userId=${userId}`)
             .then(res => {
-                setChatrooms(res.data)
+                setChatrooms(res.data);
             })
             .catch(e => {
-                console.log(e)
+                console.log(e);
             })
     }
 

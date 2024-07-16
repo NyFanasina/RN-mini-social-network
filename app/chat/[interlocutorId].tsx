@@ -12,8 +12,7 @@ export default function Chat() {
     const [sender, setSender] = useState<any>({})
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<Array<any>>([]);
-    const { interlocutor, recipientId } = useLocalSearchParams(); // Recipient
-
+    const { interlocutor, interlocutorId } = useLocalSearchParams(); // Recipient
 
     useEffect(() => {
         (async () => {
@@ -25,15 +24,19 @@ export default function Chat() {
 
     async function loadMessages() {
         const userId = await myStorage.getUserId();
-        axios.get(`${Config.chatURL}/message/${recipientId}?userId=${userId}`)
-            .then(res => setMessages(res.data))
+        console.log(userId, interlocutorId);
+        axios.get(`${Config.chatURL}/message/${interlocutorId}?userId=${userId}`)
+            .then(res => {
+                console.log(res.data)
+                setMessages(res.data)
+            })
             .catch(e => console.log(e))
     }
 
     function handleSend() {
         const body = {
             sender: sender.id,
-            recipient: recipientId,
+            recipient: interlocutorId,
             content: message
         }
         if (message)

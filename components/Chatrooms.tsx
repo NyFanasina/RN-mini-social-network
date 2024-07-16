@@ -5,7 +5,7 @@ import { router } from 'expo-router'
 export default function Chatrooms({ chatroom }: any) {
 
     function handleClick() {
-        router.push(`chat/${chatroom.recipient}`)
+        router.push(`chat/${chatroom.interlocutorId}`)
         router.setParams({
             interlocutor: chatroom.interlocutor
         })
@@ -16,7 +16,7 @@ export default function Chatrooms({ chatroom }: any) {
             <Avatar img={chatroom.profile_picture} />
             <View style={s.Chatrooms}>
                 <Text style={s.username}>{chatroom.interlocutor}</Text>
-                <Text style={s.snippet}>{chatroom.lastMsg}</Text>
+                <Text style={s.snippet}>{chatroom.lastmessage}</Text>
             </View>
         </TouchableOpacity >
     )
