@@ -12,12 +12,13 @@ export default function ImageAutoSized({ uri, showDownload = false }: any) {
   const [status, requestPermission] = MediaLibrary.usePermissions();
 
   useEffect(() => {
-    Image.getSize(uri, function (w, h) {
-      if (h > 600)
-        return setSize([w, 600]);
-      return setSize([w, h]);
-    })
+    if (uri)
+      Image.getSize(uri, function (w, h) {
+        setSize([w, h]);
+      })
   }, []);
+
+  const aspectRatio = size[0] / size[1];
 
   async function handleDownload() {
     const filename = uri.slice(uri.lastIndexOf('/')); //with file's extension
@@ -47,7 +48,7 @@ export default function ImageAutoSized({ uri, showDownload = false }: any) {
   }
 
   return (
-    <ImageBackground style={{ height: size[1] }} source={{ uri: uri }} >
+    <ImageBackground style={{ aspectRatio: aspectRatio }} source={{ uri: uri }} >
       {
         showDownload &&
         <TouchableOpacity style={s.downloadBtn} onPress={handleDownload}>

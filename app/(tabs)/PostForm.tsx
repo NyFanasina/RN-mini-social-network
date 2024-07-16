@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Config, { axiosConfig } from '@/constants/Config';
 import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 
 export default function PostForm() {
@@ -30,30 +31,33 @@ export default function PostForm() {
             name: image.fileName
         }
 
-
         if (file.uri) fd.append('image', file)
         fd.append('content', content)
 
-
-        axios.post(`${Config.baseURL}/post/posts`, fd, await axiosConfig("multipart/form-data"))
-            .then(res => {
-                setImage('');
-                setContent('');
-                router.push('Home');
-            })
-            .catch(e => console.log(e));
+        if (image.uri || content)
+            axios.post(`${Config.baseURL}/post/posts`, fd, await axiosConfig("multipart/form-data"))
+                .then(res => {
+                    setImage('');
+                    setContent('');
+                    router.push('Home');
+                })
+                .catch(e => console.log(e));
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginHorizontal: 10 }}>
             <TouchableOpacity onPress={pickImage}>
                 <Text style={s.addBtn}>Ajouter une photo</Text>
             </TouchableOpacity>
-            <TextInput style={s.input} placeholder='Laisser une publication...' onChangeText={setContent} value={content} />
+            <TextInput style={s.input} placeholder='Laisser une publication...' onChangeText={setContent} value={content} multiline />
             <View style={s.photoSet}>
-                {image && <Image source={{ uri: image.uri }} style={{ height: 350, width: "100%" }} />}
+                {image && <Image source={{ uri: image.uri }} style={s.photo} />}
             </View>
-            <TouchableOpacity style={s.postBtn} onPress={() => uploadImageAsync(image.uri)}>
+            <TouchableOpacity
+                disabled={!(image.uri || content)}
+                onPress={() => uploadImageAsync(image.uri)}
+                style={!(image.uri || content) ? s.disabled : s.postBtn}
+            >
                 <Text style={s.postBtnText}>POSTER</Text>
             </TouchableOpacity>
         </View >
@@ -68,26 +72,35 @@ const s = StyleSheet.create({
         textDecorationLine: 'underline'
     },
     input: {
+        flex: 1,
         borderRadius: 15,
-        height: 140,
-        margin: 5,
+        height: 175,
         paddingStart: 15,
         textAlignVertical: 'top',
         fontSize: 18
     },
     photoSet: {
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        justifyContent: 'center',
+        marginBottom: 5
+    },
+    photo: {
+        width: '85%',
+        height: 160,
     },
     postBtn: {
-        position: 'absolute',
-        bottom: 20,
-        left: 160
+        alignSelf: 'center',
+        marginBottom: 10,
+        backgroundColor: '#3e3e3e',
+        marginTop: 'auto'
+    },
+    disabled: {
+        alignSelf: 'center',
+        marginBottom: 10,
+        backgroundColor: Colors.gray,
     },
     postBtnText: {
-        textAlign: 'center',
         padding: 15,
-        backgroundColor: '#3e3e3e',
         color: 'white'
     }
 })
