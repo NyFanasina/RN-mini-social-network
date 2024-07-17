@@ -17,18 +17,18 @@ export default function Chatroom() {
 
     useEffect(() => {
         loadChatrooms();
+        setInterval(loadChatrooms, 1500);
         loadUsers();
     }, [])
 
-
-    // function onSearch() {
-    //     const nextChatrooms = .filter((chatroom: any) => {
+    // function onSearch(xxx) {
+    //     const nextChatrooms = users.filter((chatroom: any) => {
     //         return chatroom.interlocutor.indexOf(keyword) != -1;
     //     });
     // }
 
-
     async function loadChatrooms() {
+        console.log('load')
         const userId = await myStorage.getUserId();
         axios.get(`${Config.chatURL}/chatroom?userId=${userId}`)
             .then(res => {

@@ -20,14 +20,13 @@ export default function Chat() {
             setSender(me.user)
         })()
         loadMessages();
+        setInterval(loadMessages, 2000);
     }, [])
 
     async function loadMessages() {
         const userId = await myStorage.getUserId();
-        console.log(userId, interlocutorId);
         axios.get(`${Config.chatURL}/message/${interlocutorId}?userId=${userId}`)
             .then(res => {
-                console.log(res.data)
                 setMessages(res.data)
             })
             .catch(e => console.log(e))
