@@ -8,6 +8,7 @@ import myStorage from '@/AsyncStorage/myStorage'
 import UserChatroomItem from '@/components/UserChatroomItem'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import Head from '@/components/Head'
 
 export default function Chatroom() {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -16,9 +17,10 @@ export default function Chatroom() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
+        setModalVisible(false);
         loadChatrooms();
-        setInterval(loadChatrooms, 1500);
         loadUsers();
+        // setInterval(loadChatrooms, 1500);
     }, [])
 
     // function onSearch(xxx) {
@@ -28,15 +30,16 @@ export default function Chatroom() {
     // }
 
     async function loadChatrooms() {
-        console.log('load')
         const userId = await myStorage.getUserId();
         axios.get(`${Config.chatURL}/chatroom?userId=${userId}`)
             .then(res => {
                 setChatrooms(res.data);
+                console.log(res.data)
             })
             .catch(e => {
                 console.log(e);
             })
+        axios.get(`${Config.chatURL}/chatroom?userId=${userId}`)
     }
 
     async function loadUsers(keyWord = '') {
@@ -67,26 +70,19 @@ export default function Chatroom() {
 
             <Modal animationType='slide' visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
                 <View style={s.container}>
-                    <View style={modal.head}>
-                        <TouchableOpacity >
-                            <Ionicons name='chevron-back-outline' size={30} />
-                        </TouchableOpacity>
-                        <Text>Nouveau message</Text>
-                    </View>
-                    <TouchableOpacity style={modal.btn} onPress={() => router.push('/DiscuGroupForm')}>
+                    <Head title="Nouveau Message" />
+                    <TouchableOpacity style={modal.btn} onPress={() => router.push('./DiscuGroupForm')}>
                         <Ionicons name='add-circle-outline' size={45} />
                         <Text style={modal.btnText}>Créer un groupe de discussion</Text>
                     </TouchableOpacity>
                     <TextInput placeholder='Saisissez un nom ou un groupe' style={modal.input} />
                     <TextInput style={{ fontWeight: '600', fontStyle: 'italic' }}>Suggestions :</TextInput>
                     <View>
-                        {
-                            users.map((user, i) => <UserChatroomItem key={i} user={user} isForChat />)
-                        }
+                        {users.map((user, i) => <UserChatroomItem key={i} user={user} isForChat />)}
                     </View>
                 </View>
-            </Modal>
-        </View>
+            </Modal >
+        </View >
     )
 }
 

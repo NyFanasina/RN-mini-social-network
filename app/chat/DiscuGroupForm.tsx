@@ -1,15 +1,18 @@
 import myStorage from '@/AsyncStorage/myStorage';
 import Avatar from '@/components/Avatar'
+import Head from '@/components/Head';
 import { Colors } from '@/constants/Colors';
 import Config, { axiosConfig } from '@/constants/Config';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native'
 
 export default function DiscuGroupForm() {
     const [members, setMembers] = useState<Array<any>>([]);
     const [users, setUsers] = useState<Array<any>>([]);
+    const [gpName, setGpName] = useState<string>('');
 
     useEffect(() => {
         loadUsers();
@@ -25,24 +28,38 @@ export default function DiscuGroupForm() {
     }
 
     function onAddMember(member: any) {
-        if (members.indexOf(member)) {
+        if (members.indexOf(member) === -1) {
             let nextMembers: Array<any> = [...members];
             nextMembers.push(member);
             setMembers(nextMembers);
         }
     }
 
+    async function handleSubmit() {
+        const body = { name: gpName, members: extractIdmembers(members) };
+        if (gpName && members.length)
+            axios.post(`${Config.chatURL}/chatroom/`, body, await axiosConfig())
+                .then(res => {
+                    router.push('/chat/Chatroom')
+                })
+                .catch(e => console.log(e));
+
+    }
+
     return (
         <View style={s.container}>
+            <Head title="Nouveau Groupe" />
             <View>
-                <Text>Membre seléctioné - ({members.length})</Text>
+                <Text>Nom du groupe :</Text>
+                <TextInput placeholder='Tapez ici le mon du groupe' style={s.inputName} onChangeText={setGpName} />
+            </View>
+            <View>
+                <Text>Membre seléctioné - ({members.length}) :</Text>
                 <ScrollView contentContainerStyle={s.members}>
-                    {
-                        members.map((user: any, i) => <Avatar key={i} img={user.profile_picture} />)
-                    }
+                    {members.map((user: any, i) => <Avatar key={i} img={user.profile_picture} />)}
                 </ScrollView>
             </View>
-            <TextInput placeholder='Trouvez ici les membres de vos groupe' style={s.input} />
+            <TextInput placeholder='Trouvez ici les membres de vos groupe' style={s.inputSearch} />
             <Text style={s.suggestion}>Suggestions :</Text>
             <ScrollView>
                 {
@@ -57,8 +74,8 @@ export default function DiscuGroupForm() {
                     ))
                 }
             </ScrollView>
-            <TouchableOpacity style={s.nextBtn1}>
-                <Text style={s.nextBtnText}>suivant</Text>
+            <TouchableOpacity style={s.nextBtn1} onPress={handleSubmit}>
+                <Text style={s.nextBtnText}>Terminer</Text>
             </TouchableOpacity>
         </View >
     )
@@ -69,24 +86,18 @@ const s = StyleSheet.create({
         flex: 1,
         marginHorizontal: 10
     },
-    head: {
-        position: 'relative',
-        padding: 15,
-        borderColor: Colors.gray,
-        borderBottomWidth: 0.2
-    },
-    backBtn: {
-        position: "absolute",
-        padding: 15
-    },
-    members: {
+    inputName: {
+        padding: 7,
+        fontSize: 15,
+        backgroundColor: Colors.light
+    }
+    , members: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 2,
         minHeight: 70,
     },
-    input: {
-
+    inputSearch: {
         backgroundColor: Colors.light,
         borderWidth: 1,
         borderColor: Colors.gray,
@@ -125,3 +136,7 @@ const s = StyleSheet.create({
         fontSize: 18
     }
 })
+
+function extractIdmembers(members: any) {
+    return members.map((member: any) => member.id);
+}   

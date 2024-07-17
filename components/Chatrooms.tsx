@@ -8,14 +8,17 @@ import Config from '@/constants/Config'
 
 export default function Chatrooms({ chatroom }: any) {
 
+    const interlocutorId = chatroom.interlocutorId ?? chatroom.chatroomId;
+
     async function handleClick() {
-        await axios.patch(`${Config.chatURL}/message/${chatroom.messageId}`)
-            .then(res => console.log(res.data))
+        // await axios.patch(`${Config.chatURL}/message/${chatroom.messageId}`)
+        //     .then(res => console.log(res.data))
 
 
-        router.push(`chat/${chatroom.interlocutorId}`)
+        router.push(`chat/${interlocutorId}`)
         router.setParams({
-            interlocutor: chatroom.interlocutor
+            interlocutor: chatroom.interlocutor,
+            isGrouped: chatroom.chatroomId ? '1' : '0'
         })
     }
 
@@ -37,7 +40,6 @@ const s = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 10,
         padding: 5,
         height: 60,
         // borderWidth: 0.75,
@@ -49,20 +51,19 @@ const s = StyleSheet.create({
     },
     username: {
         fontSize: 17,
-        fontWeight: 'bold',
+        fontWeight: '600',
     },
     usernameNotSeen: {
         fontSize: 17,
         fontWeight: 'bold',
         textShadowColor: 'black',
-        textShadowRadius: 0.7
+        textShadowRadius: 0.5
     },
     message: {
-        fontWeight: '600',
         fontSize: 13,
+        color: Colors.gray,
     },
     messageNotSeen: {
-        color: Colors.gray,
         fontStyle: 'italic'
     },
 })

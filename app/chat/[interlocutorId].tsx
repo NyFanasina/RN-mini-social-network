@@ -1,5 +1,4 @@
 import myStorage from '@/AsyncStorage/myStorage'
-import Avatar from '@/components/Avatar'
 import { Colors } from '@/constants/Colors'
 import Config from '@/constants/Config'
 import { Ionicons } from '@expo/vector-icons'
@@ -12,7 +11,7 @@ export default function Chat() {
     const [sender, setSender] = useState<any>({})
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<Array<any>>([]);
-    const { interlocutor, interlocutorId } = useLocalSearchParams(); // Recipient
+    const { interlocutor, interlocutorId, isGrouped } = useLocalSearchParams(); // Recipient
 
     useEffect(() => {
         (async () => {
@@ -25,7 +24,7 @@ export default function Chat() {
 
     async function loadMessages() {
         const userId = await myStorage.getUserId();
-        axios.get(`${Config.chatURL}/message/${interlocutorId}?userId=${userId}`)
+        axios.get(`${Config.chatURL}/message/${interlocutorId}?userId=${userId}&&isGrouped=${isGrouped}`)
             .then(res => {
                 setMessages(res.data)
             })
@@ -33,11 +32,13 @@ export default function Chat() {
     }
 
     function handleSend() {
-        const body = {
+        const body: any = {
             sender: sender.id,
             recipient: interlocutorId,
-            content: message
+            content: message,
+            isGrouped: isGrouped
         }
+
         if (message)
             axios.post(`${Config.chatURL}/message`, body)
                 .then(res => {

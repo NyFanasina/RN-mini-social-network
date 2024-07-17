@@ -45,8 +45,8 @@ export default function Home() {
                     <TouchableOpacity onPress={() => router.push('Search')}>
                         <Ionicons size={30} style={s.icon} name='search-outline' />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('/Chatroom')}>
-                        <Ionicons size={30} style={s.icon} name='chatbubble-outline' />
+                    <TouchableOpacity onPress={() => router.push('/chat/Chatroom')}>
+                        <Ionicons size={30} style={s.icon} name='chatbubble-outline' onPress={() => router.push('/chat/Chatroom')} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => router.push('Notification')}>
                         <Ionicons size={30} style={s.icon} name='notifications-outline' />
